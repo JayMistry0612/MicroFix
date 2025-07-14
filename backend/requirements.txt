@@ -1,0 +1,11 @@
+Flask
+Flask-CORS
+Flask-JWT-Extended
+Flask-SQLAlchemy
+bcrypt
+python-dotenv
+whisper
+openai
+requests
+pillow
+PyPDF2

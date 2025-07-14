@@ -1,0 +1,144 @@
+{
+  "info": {
+    "_postman_id": "microfix-backend-collection",
+    "name": "MicroFix Backend API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/register", "host": ["{{base_url}}"], "path": ["api", "register"] }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/login", "host": ["{{base_url}}"], "path": ["api", "login"] }
+      }
+    },
+    {
+      "name": "PDF Summarization",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "file", "type": "file", "src": "" }
+          ]
+        },
+        "url": { "raw": "{{base_url}}/api/pdf-summary", "host": ["{{base_url}}"], "path": ["api", "pdf-summary"] }
+      }
+    },
+    {
+      "name": "Image Captioning",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "file", "type": "file", "src": "" }
+          ]
+        },
+        "url": { "raw": "{{base_url}}/api/image-caption", "host": ["{{base_url}}"], "path": ["api", "image-caption"] }
+      }
+    },
+    {
+      "name": "Audio Analysis",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "file", "type": "file", "src": "" }
+          ]
+        },
+        "url": { "raw": "{{base_url}}/api/audio-analysis", "host": ["{{base_url}}"], "path": ["api", "audio-analysis"] }
+      }
+    },
+    {
+      "name": "Tone Changer",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"Hello, how are you?\",\n  \"tone\": \"sarcastic\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/tone-changer", "host": ["{{base_url}}"], "path": ["api", "tone-changer"] }
+      }
+    },
+    {
+      "name": "Get History (PDF)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/history/pdf", "host": ["{{base_url}}"], "path": ["api", "history", "pdf"] }
+      }
+    },
+    {
+      "name": "Get History (Image)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/history/image", "host": ["{{base_url}}"], "path": ["api", "history", "image"] }
+      }
+    },
+    {
+      "name": "Get History (Audio)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/history/audio", "host": ["{{base_url}}"], "path": ["api", "history", "audio"] }
+      }
+    },
+    {
+      "name": "Get History (Tone)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/history/tone", "host": ["{{base_url}}"], "path": ["api", "history", "tone"] }
+      }
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000" },
+    { "key": "jwt_token", "value": "" }
+  ]
+} 
