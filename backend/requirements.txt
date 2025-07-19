@@ -4,8 +4,10 @@ Flask-JWT-Extended
 Flask-SQLAlchemy
 bcrypt
 python-dotenv
-whisper
+openai-whisper
+torch
 openai
 requests
 pillow
 PyPDF2
+google-generativeai
