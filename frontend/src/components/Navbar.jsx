@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import AuthContext from '../context/AuthContext';
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -8,30 +8,79 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
-    <nav style={{ display: 'flex', gap: 16, padding: 16, borderBottom: '1px solid #ccc', alignItems: 'center' }}>
-      <Link to="/">Home</Link>
-      <Link to="/pdf">PDF Summary</Link>
-      <Link to="/image">Image Caption</Link>
-      <Link to="/audio">Audio Mood</Link>
-      <Link to="/tone">Tone Changer</Link>
-      <div style={{ flex: 1 }} />
+    <nav className="flex items-center gap-6 px-6 py-3 bg-slate-800/40 backdrop-blur-xl border-b border-slate-700/50 text-slate-100">
+      {/* Left Nav Links */}
+      <div className="flex gap-4">
+        <Link
+          to="/"
+          className="hover:text-sky-400 transition-colors font-medium"
+        >
+          Home
+        </Link>
+        <Link
+          to="/pdf"
+          className="hover:text-sky-400 transition-colors font-medium"
+        >
+          PDF Summary
+        </Link>
+        <Link
+          to="/image"
+          className="hover:text-sky-400 transition-colors font-medium"
+        >
+          Image Caption
+        </Link>
+        <Link
+          to="/audio"
+          className="hover:text-sky-400 transition-colors font-medium"
+        >
+          Audio Mood
+        </Link>
+        <Link
+          to="/tone"
+          className="hover:text-sky-400 transition-colors font-medium"
+        >
+          Tone Changer
+        </Link>
+      </div>
+
+      {/* Spacer */}
+      <div className="flex-1" />
+
+      {/* Right Side (Auth Section) */}
       {user ? (
-        <>
-          <span>Welcome, <b>{user.username}</b></span>
-          <button onClick={handleLogout} style={{ marginLeft: 12 }}>Logout</button>
-        </>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-slate-300">
+            Welcome, <b className="text-slate-100">{user.username}</b>
+          </span>
+          <button
+            onClick={handleLogout}
+            className="px-3 py-1.5 bg-red-500/80 hover:bg-red-500 text-white text-sm rounded-lg shadow-md transition"
+          >
+            Logout
+          </button>
+        </div>
       ) : (
-        <>
-          <Link to="/login">Login</Link>
-          <Link to="/register">Register</Link>
-        </>
+        <div className="flex gap-4">
+          <Link
+            to="/login"
+            className="hover:text-sky-400 transition-colors font-medium"
+          >
+            Login
+          </Link>
+          <Link
+            to="/register"
+            className="hover:text-sky-400 transition-colors font-medium"
+          >
+            Register
+          </Link>
+        </div>
       )}
     </nav>
   );
 };
 
-export default Navbar; 
+export default Navbar;

@@ -22,7 +22,7 @@ const SidebarHistory = ({ feature, refresh }) => {
       try {
         const res = await axios.get(`/api/history/${feature}`, {
           headers: {
-            'Authorization': `Bearer ${getToken()}`,
+            Authorization: `Bearer ${getToken()}`,
           },
         });
         setHistory(res.data.history);
@@ -32,28 +32,42 @@ const SidebarHistory = ({ feature, refresh }) => {
       setLoading(false);
     };
     fetchHistory();
-    // eslint-disable-next-line
-  }, [feature, refresh]);
+  }, [feature, refresh, getToken]);
 
   return (
-    <aside style={{ width: 280, borderRight: '1px solid #eee', padding: 16, minHeight: 400 }}>
-      <h3 style={{ marginTop: 0 }}>{featureTitles[feature] || 'History'}</h3>
-      {loading && <div>Loading...</div>}
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      {!loading && !error && history.length === 0 && <div>No history yet.</div>}
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        {history.map(item => (
-          <li key={item.id} style={{ marginBottom: 16, borderBottom: '1px solid #f0f0f0', paddingBottom: 8 }}>
-            <div style={{ fontSize: 12, color: '#888' }}>{new Date(item.created_at).toLocaleString()}</div>
-            <div style={{ fontWeight: 500, marginTop: 4 }}>Input:</div>
-            <div style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{item.original_input?.slice(0, 100)}</div>
-            <div style={{ fontWeight: 500, marginTop: 4 }}>Output:</div>
-            <div style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>{typeof item.ai_response === 'string' ? item.ai_response.slice(0, 200) : JSON.stringify(item.ai_response)}</div>
-          </li>
-        ))}
-      </ul>
+    <aside className="flex flex-col h-full min-h-screen">
+      <h3 className="text-white text-lg font-bold mb-4">{featureTitles[feature] || 'History'}</h3>
+
+      <div className="flex-1 overflow-y-auto pr-2 space-y-2">
+        {loading && <div className="text-slate-300">Loading...</div>}
+        {error && <div className="text-red-500">{error}</div>}
+        {!loading && !error && history.length === 0 && (
+          <div className="text-slate-400">No history yet.</div>
+        )}
+
+        <ul className="space-y-1">
+          {history.map((item) => (
+            <li
+              key={item.id}
+              className="bg-slate-700/50 p-2 rounded-lg border border-slate-600/50 text-sm text-slate-200 truncate"
+              title={item.original_input || item.ai_response}
+            >
+              {/* Show only the title or first 20-30 chars */}
+              {item.original_input
+                ? item.original_input.length > 30
+                  ? item.original_input.slice(0, 30) + '...'
+                  : item.original_input
+                : item.ai_response
+                ? item.ai_response.length > 30
+                  ? item.ai_response.slice(0, 30) + '...'
+                  : item.ai_response
+                : 'Untitled'}
+            </li>
+          ))}
+        </ul>
+      </div>
     </aside>
   );
 };
 
-export default SidebarHistory; 
+export default SidebarHistory;

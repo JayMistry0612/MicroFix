@@ -10,8 +10,9 @@ import AudioMoodPage from './pages/AudioMoodPage';
 import ToneChangerPage from './pages/ToneChangerPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
-const App = () => (
-  <Router>
+const App = () => {
+  return(
+     <Router>
     <Navbar />
     <Routes>
       <Route path="/" element={<Home />} />
@@ -23,6 +24,8 @@ const App = () => (
       <Route path="/tone" element={<ProtectedRoute><ToneChangerPage /></ProtectedRoute>} />
     </Routes>
   </Router>
-);
+  )
+ 
+}
 
 export default App; 
