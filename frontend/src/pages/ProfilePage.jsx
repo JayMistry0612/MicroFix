@@ -41,7 +41,7 @@ export default function ProfilePage() {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       logout();
-      navigate("/register");
+      navigate("/");
     } catch (err) {
       console.error("Error deleting account:", err);
     }

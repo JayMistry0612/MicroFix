@@ -13,6 +13,7 @@ import HistoryPage from './pages/HistoryPage';
 import AnalyticDashboard from './pages/AnalyticDashboard';
 import MicrofixLanding from './pages/LandingPage';
 import ProfilePage from './pages/ProfilePage';
+import VerifyOtpPage from './pages/VerifyOtpPage';
 
 const App = () => {
   return(
@@ -24,7 +25,7 @@ const App = () => {
 
 const AppRoutes = () => {
   const location = useLocation();
-  const hideNavbar = ['/', '/login', '/register'].includes(location.pathname);
+  const hideNavbar = ['/', '/login', '/register','/verify-otp'].includes(location.pathname);
 
   return (
     <>
@@ -33,6 +34,7 @@ const AppRoutes = () => {
         <Route path="/" element={<MicrofixLanding />} />
         <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/verify-otp" element={<VerifyOtpPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/pdf" element={<ProtectedRoute><PdfSummaryPage /></ProtectedRoute>} />
         <Route path="/image" element={<ProtectedRoute><ImageCaptionPage /></ProtectedRoute>} />

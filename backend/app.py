@@ -3,6 +3,7 @@ from datetime import timedelta
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from flask_mail import Mail
 from dotenv import load_dotenv
 from db import db
 import bcrypt
@@ -10,16 +11,28 @@ import bcrypt
 load_dotenv()
 
 jwt = JWTManager()
+mail = Mail()
+
 
 def create_app():
     app = Flask(__name__)
+    
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///app.db')
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'jwt-secret')
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
+     # Flask-Mail config
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+
     CORS(app)
     db.init_app(app)
     jwt.init_app(app)
+    mail.init_app(app)
+
 
     # Register blueprints (to be implemented)
     from auth.routes import auth_bp
@@ -62,5 +75,6 @@ if __name__ == '__main__':
     with app.app_context():
         from models.user import User
         from models.history import RequestHistory
+   #     db.drop_all()
         db.create_all()
     app.run(host='0.0.0.0', port=5000, debug=True)
