@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
-import { History as HistoryIcon, Sparkles, Filter } from 'lucide-react';
+import { History as HistoryIcon, Sparkles, Filter, ChevronDown } from 'lucide-react';
 
 const featureTitles = {
   all: 'All Features',
@@ -19,6 +19,8 @@ const HistoryPage = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const fetchHistory = async (feature) => {
     setLoading(true);
@@ -42,6 +44,13 @@ const HistoryPage = () => {
   useEffect(() => {
     fetchHistory(selectedFeature);
   }, [selectedFeature]);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 820);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="min-h-screen bg-indigo-950 relative overflow-hidden">
@@ -80,27 +89,60 @@ const HistoryPage = () => {
             {/* Card */}
             <div className="bg-slate-800/60 backdrop-blur-xl rounded-3xl border border-slate-700/50 shadow-2xl overflow-hidden">
               <div className="p-8">
-                {/* Filter pills */}
-                <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Filter className="w-4 h-4 text-slate-300" />
-                    {features.map((feat) => (
+                {/* Filter */}
+                <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+                  {isMobile ? (
+                    <div className="relative w-full">
                       <button
-                        key={feat}
-                        onClick={() => setSelectedFeature(feat)}
-                        className={`px-3 py-1.5 rounded-full text-sm transition border ${
-                          selectedFeature === feat
-                            ? 'bg-purple-500/80 text-white border-purple-400/50'
-                            : 'bg-slate-700/50 text-slate-200 border-slate-600/50 hover:bg-slate-700'
-                        }`}
+                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                        className="w-full bg-slate-700 text-slate-200 px-4 py-2 rounded-lg flex justify-between items-center hover:bg-slate-800 transition"
                       >
-                        {featureTitles[feat]}
+                        <div className="flex items-center gap-2">
+                          <Filter className="w-4 h-4" />
+                          <span>{featureTitles[selectedFeature]}</span>
+                        </div>
+                        <ChevronDown className={`w-4 h-4 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
                       </button>
-                    ))}
-                  </div>
-                  <div className="text-slate-400 text-sm">
-                    {history.length} record{history.length === 1 ? '' : 's'}
-                  </div>
+                      {dropdownOpen && (
+                        <ul className="absolute mt-1 w-full bg-slate-700 border border-slate-600 rounded-lg shadow-lg z-50 overflow-hidden">
+                          {features.map((feat) => (
+                            <li
+                              key={feat}
+                              onClick={() => {
+                                setSelectedFeature(feat);
+                                setDropdownOpen(false);
+                              }}
+                              className={`px-4 py-2 cursor-pointer transition ${
+                                selectedFeature === feat
+                                  ? 'bg-purple-600 text-white'
+                                  : 'hover:bg-purple-500 hover:text-white text-slate-200'
+                              }`}
+                            >
+                              {featureTitles[feat]}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <Filter className="w-4 h-4 text-slate-300 flex-shrink-0" />
+                      {features.map((feat) => (
+                        <button
+                          key={feat}
+                          onClick={() => setSelectedFeature(feat)}
+                          className={`px-3 py-1.5 rounded-full text-sm transition border flex-shrink-0 ${
+                            selectedFeature === feat
+                              ? 'bg-purple-600 text-white border-purple-500'
+                              : 'bg-slate-700 text-slate-200 border-slate-600 hover:bg-purple-500/90 hover:text-white'
+                          }`}
+                        >
+                          {featureTitles[feat]}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {!isMobile && <div className="text-slate-400 text-sm">{history.length} record{history.length === 1 ? '' : 's'}</div>}
                 </div>
 
                 {/* Content */}
@@ -129,12 +171,8 @@ const HistoryPage = () => {
                       className="bg-slate-700/50 p-4 rounded-xl border border-slate-600/50 text-sm text-slate-200 transition hover:bg-slate-700/60 hover:border-slate-500/60"
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <p className="font-semibold">
-                          {featureTitles[item.feature] || 'Unknown'}
-                        </p>
-                        <p className="text-xs text-gray-400">
-                          {new Date(item.created_at).toLocaleString()}
-                        </p>
+                        <p className="font-semibold">{featureTitles[item.feature] || 'Unknown'}</p>
+                        <p className="text-xs text-gray-400">{new Date(item.created_at).toLocaleString()}</p>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>

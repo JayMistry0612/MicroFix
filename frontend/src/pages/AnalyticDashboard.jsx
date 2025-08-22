@@ -8,11 +8,10 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AA00FF', '#FF0066'
 
 const AnalyticDashboard = () => {
   const { getToken } = useContext(AuthContext);
-
-  // Data states
-  const [reductionData, setReductionData] = useState([]); // { name: 'Doc1', reduction: 40 }
-  const [moodData, setMoodData] = useState([]); // { mood: 'Happy', value: 30 }
+  const [reductionData, setReductionData] = useState([]);
+  const [moodData, setMoodData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 820);
 
   const fetchAnalytics = async () => {
     setLoading(true);
@@ -20,13 +19,8 @@ const AnalyticDashboard = () => {
       const res = await axios.get('/api/analytics', {
         headers: { Authorization: `Bearer ${getToken()}` }
       });
-      const data = res.data;
-
-      // Word reduction percentage from backend (PDF-based)
-      setReductionData(data.reductionData || []);
-
-      // Mood detection from backend (audio-based)
-      setMoodData(data.moodDetection || []); // should be [{ mood: 'Happy', value: 40 }, ...]
+      setReductionData(res.data.reductionData || []);
+      setMoodData(res.data.moodDetection || []);
     } catch (err) {
       console.error(err);
     }
@@ -35,6 +29,10 @@ const AnalyticDashboard = () => {
 
   useEffect(() => {
     fetchAnalytics();
+
+    const handleResize = () => setIsMobile(window.innerWidth <= 820);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
@@ -59,84 +57,57 @@ const AnalyticDashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex min-h-screen relative z-10">
-        <div className="flex-1 flex items-center justify-center p-8">
-          <div className="w-full max-w-5xl">
-            {/* Header */}
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-500/20 rounded-2xl border border-purple-400/30 mb-4 backdrop-blur-sm">
-                <Brain className="w-8 h-8 text-purple-400" />
-              </div>
-              <h2 className="text-4xl font-bold text-white mb-2">Analytics Dashboard</h2>
-              <p className="text-slate-300 text-lg">Insights across your activity</p>
-            </div>
+      <div className="flex min-h-screen relative z-10 p-4 md:p-8 flex-col md:flex-row gap-6">
+        <div className="flex-1 flex flex-col gap-6">
+          {/* Word Reduction Chart */}
+          <div className="bg-slate-800/60 backdrop-blur-xl rounded-3xl border border-slate-700/50 shadow-2xl overflow-hidden p-4 md:p-8">
+            <h2 className="text-2xl text-white font-bold mb-4 flex items-center space-x-2">
+              <FileText className="w-6 h-6 text-teal-400" />
+              <span>Word Reduction %</span>
+            </h2>
+            {loading ? (
+              <div className="h-48 bg-slate-600/30 rounded animate-pulse"></div>
+            ) : (
+              <ResponsiveContainer width="100%" height={isMobile ? 200 : 240}>
+                <BarChart data={reductionData}>
+                  <XAxis dataKey="name" stroke="#ccc" />
+                  <YAxis stroke="#ccc" />
+                  <Tooltip />
+                  <Bar dataKey="reduction" fill="#00C49F" />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </div>
 
-            {/* Card */}
-            <div className="bg-slate-800/60 backdrop-blur-xl rounded-3xl border border-slate-700/50 shadow-2xl overflow-hidden">
-              <div className="p-8 space-y-8">
-                {loading ? (
-                  <div className="space-y-8">
-                    <div className="bg-slate-700/50 border border-slate-600/50 rounded-xl p-4">
-                      <div className="h-6 bg-slate-600/50 rounded w-40 mb-4 animate-pulse"></div>
-                      <div className="h-48 bg-slate-600/30 rounded animate-pulse"></div>
-                    </div>
-                    <div className="bg-slate-700/50 border border-slate-600/50 rounded-xl p-4">
-                      <div className="h-6 bg-slate-600/50 rounded w-40 mb-4 animate-pulse"></div>
-                      <div className="h-72 bg-slate-600/30 rounded animate-pulse"></div>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    {/* Word Reduction Chart */}
-                    <div>
-                      <h2 className="text-2xl text-white font-bold mb-4 flex items-center space-x-2">
-                        <FileText className="w-6 h-6 text-teal-400" />
-                        <span>Word Reduction %</span>
-                      </h2>
-                      <div className="bg-slate-700/50 border border-slate-600/50 rounded-xl p-4">
-                        <ResponsiveContainer width="100%" height={240}>
-                          <BarChart data={reductionData}>
-                            <XAxis dataKey="name" stroke="#ccc" />
-                            <YAxis stroke="#ccc" />
-                            <Tooltip />
-                            <Bar dataKey="reduction" fill="#00C49F" />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </div>
-
-                    {/* Mood Detection */}
-                    <div>
-                      <h2 className="text-2xl text-white font-bold mb-4 flex items-center space-x-2">
-                        <Sparkles className="w-6 h-6 text-yellow-400" />
-                        <span>Mood Detection</span>
-                      </h2>
-                      <div className="bg-slate-700/50 border border-slate-600/50 rounded-xl p-4">
-                        <ResponsiveContainer width="100%" height={320}>
-                          <PieChart>
-                            <Pie
-                              dataKey="value"
-                              isAnimationActive={true}
-                              data={moodData}
-                              cx="50%"
-                              cy="50%"
-                              outerRadius={110}
-                              label={(entry) => `${entry.mood} (${entry.value}%)`}
-                            >
-                              {moodData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                              ))}
-                            </Pie>
-                            <Tooltip />
-                            <Legend />
-                          </PieChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
+          {/* Mood Detection */}
+          <div className="bg-slate-800/60 backdrop-blur-xl rounded-3xl border border-slate-700/50 shadow-2xl overflow-hidden p-4 md:p-8">
+            <h2 className="text-2xl text-white font-bold mb-4 flex items-center space-x-2">
+              <Sparkles className="w-6 h-6 text-yellow-400" />
+              <span>Mood Detection</span>
+            </h2>
+            {loading ? (
+              <div className="h-72 bg-slate-600/30 rounded animate-pulse"></div>
+            ) : (
+              <ResponsiveContainer width="100%" height={isMobile ? 250 : 320}>
+                <PieChart>
+                  <Pie
+                    dataKey="value"
+                    isAnimationActive={true}
+                    data={moodData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={isMobile ? 80 : 110}
+                    label={(entry) => `${entry.mood} (${entry.value}%)`}
+                  >
+                    {moodData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  {!isMobile && <Legend />}
+                </PieChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </div>
       </div>

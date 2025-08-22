@@ -12,6 +12,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import HistoryPage from './pages/HistoryPage';
 import AnalyticDashboard from './pages/AnalyticDashboard';
 import MicrofixLanding from './pages/LandingPage';
+import ProfilePage from './pages/ProfilePage';
 
 const App = () => {
   return(
@@ -39,6 +40,7 @@ const AppRoutes = () => {
         <Route path="/tone" element={<ProtectedRoute><ToneChangerPage /></ProtectedRoute>} />
         <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
         <Route path="/analytics" element={<ProtectedRoute><AnalyticDashboard /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
       </Routes>
     </>
   );

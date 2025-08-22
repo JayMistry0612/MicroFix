@@ -39,9 +39,21 @@ def login():
 def profile():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
-    history=RequestHistory.query.filter_by(user_id=user_id).all().count()    
+    history=RequestHistory.query.filter_by(user_id=user_id).count()    
     if not user:
         return jsonify({'error': 'User not found'}), 404
     
     return jsonify({'data':{'username': user.username, 'email': user.email,'records':history}})
 
+
+@auth_bp.route('/delete-account', methods=['DELETE'])
+@jwt_required()
+def delete_account():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    RequestHistory.query.filter_by(user_id=user_id).delete()
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'message': 'Account deleted successfully'}), 200
