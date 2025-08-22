@@ -219,7 +219,9 @@ const RegisterPage = () => {
                 <div className="text-center space-y-3">
                   <p className="text-slate-400 text-sm">
                     Already have an account?{' '}
-                    <button className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors duration-300 hover:underline">
+                    <button className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors duration-300 hover:underline" onClick={  ()=>{  navigate('/login')
+}}>
+                      
                       Sign in here
                     </button>
                   </p>

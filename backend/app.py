@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -15,6 +16,7 @@ def create_app():
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///app.db')
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'jwt-secret')
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
     CORS(app)
     db.init_app(app)
     jwt.init_app(app)
@@ -32,6 +34,8 @@ def create_app():
     app.register_blueprint(tone_bp, url_prefix='/api')
     from routes.history_handler import history_bp
     app.register_blueprint(history_bp, url_prefix='/api')
+    from routes.analysis_routes import analytics_bp
+    app.register_blueprint(analytics_bp, url_prefix='/api')
     # ...
 
     @app.route('/')

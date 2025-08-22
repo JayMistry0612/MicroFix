@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import AuthContext from '../context/AuthContext';
-import SidebarHistory from '../components/SidebarHistory';
 import axios from 'axios';
 import { FileAudio, Sparkles, Zap } from 'lucide-react';
 
@@ -75,6 +74,9 @@ const AudioMoodPage = () => {
     <div className="min-h-screen bg-indigo-950 relative overflow-hidden">
       {/* Animated background */}
       <div className="absolute inset-0">
+        <div className="absolute top-10 left-10 w-32 h-32 border-2 border-purple-400/20 rounded-lg rotate-12 animate-spin [animation-duration:15s]"></div>
+        <div className="absolute bottom-20 right-20 w-24 h-24 border-2 border-teal-400/20 rounded-full animate-pulse [animation-delay:2s]"></div>
+        <div className="absolute top-1/3 right-10 w-16 h-16 bg-rose-400/10 rounded-lg animate-bounce [animation-delay:1s]"></div>
         {[...Array(15)].map((_, i) => (
           <div
             key={i}
@@ -90,10 +92,7 @@ const AudioMoodPage = () => {
       </div>
 
       <div className="flex min-h-screen relative z-10">
-        {/* Sidebar */}
-        <div className="w-64 bg-slate-800/40 backdrop-blur-xl border-r border-slate-700/50 p-6">
-          <SidebarHistory feature="audio" refresh={historyRefresh} />
-        </div>
+        
 
         <div className="flex-1 flex items-center justify-center p-8">
           <div className="w-full max-w-2xl">

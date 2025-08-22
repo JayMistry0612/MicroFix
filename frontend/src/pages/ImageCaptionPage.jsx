@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useContext } from 'react';
 import AuthContext from '../context/AuthContext';
-import SidebarHistory from '../components/SidebarHistory';
 import axios from 'axios';
 import { Upload, Image, Zap, FileImage, Sparkles, Camera, Menu, History } from 'lucide-react';
 
@@ -123,9 +122,7 @@ const ImageCaptionPage = () => {
 
       <div className="flex min-h-screen relative z-10">
         {/* Mock Sidebar */}
-          <div className="w-64 bg-slate-800/40 backdrop-blur-xl border-r border-slate-700/50 p-6">
-            <SidebarHistory feature="image" refresh={historyRefresh} />
-          </div>
+         
         
         <div className="flex-1 flex items-center justify-center p-8">
           <div className="w-full max-w-2xl">

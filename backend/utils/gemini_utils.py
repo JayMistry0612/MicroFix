@@ -2,6 +2,7 @@ import os
 import google.generativeai as genai
 from PIL import Image
 import io
+import json
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
@@ -53,3 +54,49 @@ def rewrite_text_with_tone(text, tone):
     )
     response = model.generate_content(prompt)
     return response.text if hasattr(response, 'text') else str(response) 
+
+def generate_pdf_followups(summary_text):
+    if not GEMINI_API_KEY:
+        return {
+            "questions": [
+                "What are the key assumptions behind the main argument?",
+                "How could these findings be applied in a real-world scenario?",
+                "What are potential limitations or counterarguments?",
+                "What further data would strengthen the conclusions?",
+                "Which sections need deeper exploration or examples?"
+            ]
+        }
+
+    model = genai.GenerativeModel("gemini-1.5-pro")
+    prompt = (
+        "You are assisting with study and research follow-ups. Given the following PDF summary, "
+        "create 5 concise, high-quality follow-up questions a reader could ask next.\n"
+        "Respond strictly as JSON array of strings (no numbering, no extra keys, no prose outside JSON).\n\n"
+        f"SUMMARY:\n{summary_text}\n\n"
+        "Return only a JSON array of strings."
+    )
+    response = model.generate_content(prompt)
+    text = response.text if hasattr(response, 'text') else str(response)
+    # Try strict JSON array parse first
+    try:
+        data = json.loads(text)
+        if isinstance(data, list):
+            questions = [q for q in data if isinstance(q, str)]
+            return {"questions": questions[:5]}
+        if isinstance(data, dict) and "questions" in data and isinstance(data["questions"], list):
+            questions = [q for q in data["questions"] if isinstance(q, str)]
+            return {"questions": questions[:5]}
+    except Exception:
+        pass
+
+    # Fallback: extract lines that look like questions
+    raw_lines = [l.strip() for l in text.splitlines() if l.strip()]
+    cleaned = []
+    for l in raw_lines:
+        # Strip common bullets/numbering
+        l2 = l.lstrip("-•* ")
+        if l2 and (l2.endswith("?") or len(l2.split()) >= 4):
+            cleaned.append(l2)
+    if not cleaned:
+        cleaned = raw_lines
+    return {"questions": cleaned[:5]}

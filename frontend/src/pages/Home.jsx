@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { FileText, Image, Volume2, Music, ArrowRight, Sparkles, Zap, Brain, Activity } from 'lucide-react';
 
 const Home = () => {
@@ -21,24 +21,38 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 relative overflow-hidden">
-      {/* Header */}
-      <header className="relative z-10 p-6">
-        <div className="flex justify-between items-center max-w-7xl mx-auto">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-purple-500/20 rounded-xl border border-purple-400/30 flex items-center justify-center backdrop-blur-sm">
-              <Brain className="w-6 h-6 text-purple-400" />
-            </div>
-            <h1 className="text-2xl font-bold text-white">AI Studio</h1>
+    <div className="min-h-screen bg-indigo-950 relative overflow-hidden pt-6 md:pt-10">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-10 left-10 w-32 h-32 border-2 border-purple-400/20 rounded-lg rotate-12 animate-spin [animation-duration:15s]"></div>
+        <div className="absolute bottom-20 right-20 w-24 h-24 border-2 border-teal-400/20 rounded-full animate-pulse [animation-delay:2s]"></div>
+        <div className="absolute top-1/3 right-10 w-16 h-16 bg-rose-400/10 rounded-lg animate-bounce [animation-delay:1s]"></div>
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-2 h-2 bg-purple-300/30 rounded-full animate-ping"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: '4s'
+            }}
+          ></div>
+        ))}
+      </div>
+
+      {/* Header removed to avoid duplicate branding with Navbar */}
+
+      {/* Hero */}
+      <section className="relative z-10 px-6">
+        <div className="max-w-7xl mx-auto text-center mb-4 md:mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-500/20 rounded-2xl border border-purple-400/30 mb-4 backdrop-blur-sm">
+            <Activity className="w-8 h-8 text-purple-400" />
           </div>
-          <button
-            onClick={() => navigate('/login')}
-            className="bg-cyan-500 text-slate-900 px-6 py-3 rounded-xl font-semibold hover:bg-cyan-400 transform transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-cyan-500/50"
-          >
-            Get Started
-          </button>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-3">Supercharge your content workflows</h2>
+          <p className="text-slate-300 text-lg max-w-2xl mx-auto">Summarize PDFs, caption images, analyze audio mood, and transform tone — all in one sleek workspace.</p>
         </div>
-      </header>
+      </section>
 
       {/* Feature Cards */}
       <main className="relative z-10 px-6 py-12">

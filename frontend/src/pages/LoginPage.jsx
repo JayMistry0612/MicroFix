@@ -19,7 +19,7 @@ const LoginPage = () => {
     const res = await login(username, password);
     setLoading(false);
     if (res.success) {
-      navigate('/');
+      navigate('/home');
     } else {
       setError(res.message);
     }
@@ -190,7 +190,7 @@ const LoginPage = () => {
                   </button>
                   <p className="text-slate-400 text-sm">
                     Don't have an account?{' '}
-                    <button className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors duration-300 hover:underline">
+                    <button onClick={() => navigate('/register')} className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors duration-300 hover:underline">
                       Create one now
                     </button>
                   </p>

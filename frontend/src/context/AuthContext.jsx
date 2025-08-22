@@ -21,8 +21,8 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       const res = await axios.post('/api/login', { username, password });
-      Cookies.set('jwt_token', res.data.access_token);
-      Cookies.set('user', JSON.stringify(res.data.user));
+      Cookies.set('jwt_token', res.data.access_token, { expires: 30, sameSite: 'lax' });
+      Cookies.set('user', JSON.stringify(res.data.user), { expires: 30, sameSite: 'lax' });
       setUser(res.data.user);
       return { success: true };
     } catch (err) {
