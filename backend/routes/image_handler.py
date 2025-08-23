@@ -12,8 +12,10 @@ def image_caption():
     if 'file' not in request.files:
         return jsonify({'error': 'No file uploaded'}), 400
     file = request.files['file']
+    caption=request.form['caption_type']
+    
     try:
-        caption = caption_image_with_gemini(file)
+        caption = caption_image_with_gemini(file,caption)
         # Save to history
         user_id = get_jwt_identity()
         history = RequestHistory(

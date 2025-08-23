@@ -218,6 +218,12 @@ const LoginPage = () => {
             >
               Forgot your password?
             </button>
+             <button
+    onClick={() => navigate("/register")}
+    className="w-full bg-cyan-500 text-slate-900 py-3 rounded-xl font-bold hover:bg-cyan-400 transition-all"
+  >
+    Create an Account
+  </button>
           </div>
         </div>
       </div>

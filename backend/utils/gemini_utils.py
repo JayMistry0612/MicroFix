@@ -20,7 +20,7 @@ def summarize_text_with_gemini(text):
     response = model.generate_content(prompt)
     return response.text if hasattr(response, 'text') else str(response)
 
-def caption_image_with_gemini(file):
+def caption_image_with_gemini(file,caption_type):
     if not GEMINI_API_KEY:
         return "Gemini API key not set."
     model = genai.GenerativeModel("gemini-1.5-pro")
@@ -31,7 +31,7 @@ def caption_image_with_gemini(file):
         file.seek(0)
         image = Image.open(io.BytesIO(file.read()))
     prompt = "Describe the contents of this image in one sentence."
-    response = model.generate_content([prompt, image])
+    response = model.generate_content([prompt, image, caption_type])
     return response.text if hasattr(response, 'text') else str(response)
 
 def analyze_mood_with_gemini(text):
